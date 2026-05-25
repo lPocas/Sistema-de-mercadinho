@@ -3,356 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Integrado - Mercadinho Seu Zé</title>
+    <title>Sistema Mercadinho Seu Zé - Oficial</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --bg-body: #f1f5f9;
-            --bg-sidebar: #ffffff;
-            --text-main: #1e293b;
-            --text-sub: #64748b;
-            --accent: #3b82f6;
-            --border: #e2e8f0;
+            --sidebar-color: #ffffff;
+            --primary-text: #1e293b;
+            --secondary-text: #64748b;
+            --accent-blue: #2563eb;
+            --border-light: #e2e8f0;
+            --danger: #ef4444;
+            --success: #10b981;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background: var(--bg-body); color: var(--text-main); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg-body); color: var(--primary-text); }
 
-        /* --- LOGIN --- */
+        /* --- TELA DE LOGIN --- */
         .login-screen {
-            width: 100%; height: 100vh; background: #e2e8f0;
+            width: 100%; height: 100vh; background: #cbd5e1;
             display: flex; justify-content: center; align-items: center;
+            position: fixed; z-index: 1000;
         }
         .login-box {
-            width: 380px; background: white; padding: 40px; border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center;
+            width: 380px; background: white; padding: 40px; border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); text-align: center;
         }
-        .login-box i { font-size: 50px; color: var(--text-main); margin-bottom: 15px; }
-        .input-group { text-align: left; margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 13px; margin-bottom: 5px; color: var(--text-sub); }
-        .input-group input {
-            width: 100%; padding: 12px; border: 1px solid var(--border);
-            border-radius: 8px; outline: none; background: #f8fafc;
-        }
-        .login-btn {
-            width: 100%; padding: 13px; background: var(--text-main);
-            color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
-        }
+        .login-logo { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; object-fit: cover; border: 4px solid var(--bg-body); }
+        .login-box h1 { margin-bottom: 25px; font-size: 24px; color: var(--primary-text); }
+        .input-group { text-align: left; margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 13px; color: var(--secondary-text); margin-bottom: 5px; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid var(--border-light); border-radius: 10px; outline: none; background: #f8fafc; }
+        .login-btn { width: 100%; padding: 14px; background: #1a2e35; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        .login-btn:hover { background: #000; }
 
-        /* --- LAYOUT SISTEMA --- */
+        /* --- ESTRUTURA PRINCIPAL --- */
         .system { display: none; }
         .sidebar {
-            width: 260px; height: 100vh; background: var(--bg-sidebar);
-            border-right: 1px solid var(--border); position: fixed; padding: 25px;
+            width: 280px; height: 100vh; background: var(--sidebar-color);
+            border-right: 1px solid var(--border-light); position: fixed; padding: 20px;
         }
-        .sidebar h2 { font-size: 20px; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
-        
+        .brand { display: flex; flex-direction: column; align-items: center; padding-bottom: 30px; border-bottom: 1px solid var(--border-light); margin-bottom: 20px; }
+        .brand img { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px; }
+        .brand h2 { font-size: 18px; color: var(--primary-text); }
+
         .menu a {
-            display: flex; align-items: center; gap: 12px; color: var(--text-sub);
-            text-decoration: none; padding: 12px; border-radius: 10px; margin-bottom: 5px; transition: 0.2s;
+            display: flex; align-items: center; gap: 12px; color: var(--secondary-text);
+            text-decoration: none; padding: 14px; border-radius: 12px; margin-bottom: 5px; cursor: pointer; transition: 0.2s;
         }
-        .menu a:hover, .menu a.active { background: #f1f5f9; color: var(--text-main); font-weight: 600; }
-        
-        .main { margin-left: 260px; padding: 40px; }
-        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .user-tag { background: white; padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); font-size: 14px; }
-        
-        /* --- COMPONENTES --- */
-        .app-section { display: none; }
-        .app-section.active { display: block; }
-        
-        .content-box { background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 25px; }
-        .content-box h3 { margin-bottom: 20px; font-size: 18px; }
+        .menu a i { width: 20px; font-size: 18px; }
+        .menu a:hover, .menu a.active { background: #f1f5f9; color: var(--accent-blue); font-weight: 600; }
 
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
-        .stat-card span { font-size: 13px; color: var(--text-sub); }
-        .stat-card h2 { font-size: 24px; margin-top: 5px; }
-
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .form-row input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
+        .main-container { margin-left: 280px; padding: 40px; }
         
-        table { width: 100%; border-collapse: collapse; }
-        table th { text-align: left; padding: 12px; background: #f8fafc; color: var(--text-sub); font-size: 13px; border-bottom: 1px solid var(--border); }
-        table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; }
+        .user-pill { background: white; padding: 10px 20px; border-radius: 50px; border: 1px solid var(--border-light); font-size: 14px; display: flex; align-items: center; gap: 10px; }
 
-        .btn-action { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; }
-        .btn-save { background: var(--accent); color: white; }
-        .btn-del { color: #ef4444; background: none; font-size: 16px; }
+        /* --- SEÇÕES --- */
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .badge-vencido { background: #fee2e2; color: #ef4444; padding: 3px 7px; border-radius: 4px; font-size: 11px; }
+        .box { background: white; padding: 30px; border-radius: 20px; border: 1px solid var(--border-light); margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .box h3 { margin-bottom: 20px; font-size: 20px; display: flex; align-items: center; gap: 10px; }
+
+        /* TABELAS */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table th { text-align: left; padding: 15px; background: #f8fafc; color: var(--secondary-text); font-size: 13px; font-weight: 600; border-bottom: 2px solid var(--bg-body); }
+        table td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
         
-        /* Restrição visual */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 12px; margin-bottom: 5px; color: var(--secondary-text); }
+        .form-grid input { width: 100%; padding: 12px; border: 1px solid var(--border-light); border-radius: 8px; outline: none; }
+        
+        .btn { padding: 12px 25px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .btn-blue { background: var(--accent-blue); color: white; }
+        .btn-blue:hover { background: #1d4ed8; }
+
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; }
+        .badge-red { background: #fee2e2; color: var(--danger); }
+        .badge-green { background: #dcfce7; color: var(--success); }
+
+        /* ACESSO ADM */
         .adm-only { display: none !important; }
-        body.is-adm .adm-only { display: flex !important; }
-        body.is-adm .adm-only.app-section.active { display: block !important; }
+        body.mode-adm .adm-only { display: flex !important; }
+        body.mode-adm .adm-only.section.active { display: block !important; }
     </style>
 </head>
-<body id="bodyApp">
+<body id="appBody">
 
-<div class="login-screen" id="loginScreen">
-    <div class="login-box">
-        <i class="fa-solid fa-circle-user"></i>
-        <h1>Mercadinho Zé</h1>
-        <div class="input-group">
-            <label>Usuário</label>
-            <input type="text" id="userInput" placeholder="Digite seu login">
-        </div>
-        <div class="input-group">
-            <label>Senha</label>
-            <input type="password" id="passInput" placeholder="••••••••">
-        </div>
-        <button class="login-btn" onclick="tentarLogin()">Aceder ao Sistema</button>
-    </div>
-</div>
-
-<div class="system" id="systemArea">
-    <div class="sidebar">
-        <h2><i class="fa-solid fa-store"></i> Seu Zé</h2>
-        <div class="menu">
-            <a href="#" class="active" onclick="navegar('sec-dash', this)"><i class="fa-solid fa-house"></i> <span>Dashboard</span></a>
-            <a href="#" onclick="navegar('sec-estoque', this)"><i class="fa-solid fa-boxes-stacked"></i> <span>Estoque</span></a>
-            <a href="#" class="adm-only" onclick="navegar('sec-fornecedores', this)"><i class="fa-solid fa-truck"></i> <span>Fornecedores</span></a>
-            <a href="#" class="adm-only" onclick="navegar('sec-lucros', this)"><i class="fa-solid fa-chart-line"></i> <span>Lucros</span></a>
-            <a href="#" class="adm-only" onclick="navegar('sec-dividas', this)"><i class="fa-solid fa-book"></i> <span>Dívidas (Fiado)</span></a>
-            <a href="#" class="adm-only" onclick="navegar('sec-logs', this)"><i class="fa-solid fa-clock-rotate-left"></i> <span>Logs do Sistema</span></a>
+    <div class="login-screen" id="loginArea">
+        <div class="login-box">
+            <img src="image_aa2045.jpg" alt="Logo Seu Zé" class="login-logo">
+            <h1>Sistema Seu Zé</h1>
+            <div class="input-group">
+                <label>Usuário</label>
+                <input type="text" id="user" placeholder="adm264 ou user24608">
+            </div>
+            <div class="input-group">
+                <label>Senha</label>
+                <input type="password" id="pass" placeholder="••••••••">
+            </div>
+            <button class="login-btn" onclick="logar()">Acessar Painel</button>
         </div>
     </div>
 
-    <div class="main">
-        <div class="topbar">
-            <h1 id="viewTitle">Dashboard</h1>
-            <div class="user-tag">
-                <i class="fa-solid fa-user-check"></i> <span id="userNameDisplay">---</span>
-                <button onclick="location.reload()" class="logout-btn" style="background:none; border:none; color:red; margin-left:10px; cursor:pointer">Sair</button>
+    <div class="system" id="sysArea">
+        <div class="sidebar">
+            <div class="brand">
+                <img src="image_aa2045.jpg" alt="Logo">
+                <h2>Mercadinho do Zé</h2>
+            </div>
+            <div class="menu">
+                <a onclick="irPara('sec-dash', this)" class="active"><i class="fa-solid fa-house-chimney"></i> <span>Dashboard</span></a>
+                <a onclick="irPara('sec-estoque', this)"><i class="fa-solid fa-boxes-stacked"></i> <span>Estoque</span></a>
+                <a onclick="irPara('sec-dividas', this)" class="adm-only"><i class="fa-solid fa-hand-holding-dollar"></i> <span>Dívidas</span></a>
+                <a onclick="irPara('sec-lucros', this)" class="adm-only"><i class="fa-solid fa-chart-line"></i> <span>Lucros</span></a>
+                <a onclick="irPara('sec-logs', this)" class="adm-only"><i class="fa-solid fa-clock-rotate-left"></i> <span>Histórico</span></a>
             </div>
         </div>
 
-        <div id="sec-dash" class="app-section active">
-            <div class="cards-grid">
-                <div class="stat-card"><span>Itens em Stock</span><h2 id="st-stock">0</h2></div>
-                <div class="stat-card"><span>A Receber (Dívidas)</span><h2 id="st-dividas">R$ 0,00</h2></div>
-                <div class="stat-card adm-only"><span>Lucro Previsto</span><h2 id="st-lucro">R$ 0,00</h2></div>
-            </div>
-            <div class="content-box">
-                <h3>Resumo de Atividade</h3>
-                <p>Seja bem-vindo. Use o menu para gerir o mercadinho.</p>
-            </div>
-        </div>
-
-        <div id="sec-estoque" class="app-section">
-            <div class="content-box">
-                <h3>Adicionar Novo Produto</h3>
-                <div class="form-row">
-                    <input type="text" id="p-nome" placeholder="Nome do Produto">
-                    <input type="number" id="p-qtd" placeholder="Qtd Stock">
-                    <input type="number" id="p-custo" placeholder="Preço Custo">
-                    <input type="number" id="p-venda" placeholder="Preço Venda">
-                    <input type="date" id="p-val">
+        <div class="main-container">
+            <div class="header">
+                <h1 id="screenTitle">Dashboard</h1>
+                <div class="user-pill">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span id="userName">Usuário</span>
+                    <button onclick="location.reload()" style="border:none; background:none; color:var(--danger); cursor:pointer; font-weight:bold; margin-left:10px">Sair</button>
                 </div>
-                <button class="btn-action btn-save" onclick="cadastrarProduto()">Salvar Produto</button>
             </div>
-            <div class="content-box">
-                <h3>Lista de Stock</h3>
-                <table id="tbl-estoque">
-                    <thead>
-                        <tr><th>Produto</th><th>Qtd</th><th>Preço Venda</th><th>Validade</th><th>Status</th><th>Ações</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
 
-        <div id="sec-lucros" class="app-section adm-only">
-            <div class="content-box">
-                <h3>Relatório Financeiro</h3>
-                <table id="tbl-lucros">
-                    <thead>
-                        <tr><th>Produto</th><th>Investimento</th><th>Retorno Previsto</th><th>Lucro Real</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="sec-dividas" class="app-section adm-only">
-            <div class="content-box">
-                <h3>Caderninho de Fiado</h3>
-                <div class="form-row">
-                    <input type="text" id="d-nome" placeholder="Nome do Cliente">
-                    <input type="number" id="d-valor" placeholder="Valor Devido">
+            <div id="sec-dash" class="section active">
+                <div class="box">
+                    <h3><i class="fa-solid fa-hand-wave" style="color: #f59e0b;"></i> Olá, <span id="welcomeName">Zé</span>!</h3>
+                    <p>O sistema está pronto. Escolha uma categoria ao lado para começar o trabalho de hoje.</p>
                 </div>
-                <button class="btn-action btn-save" onclick="addDivida()">Registrar Dívida</button>
-                <table style="margin-top:20px" id="tbl-dividas">
-                    <thead><tr><th>Cliente</th><th>Valor</th><th>Ação</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+            </div>
+
+            <div id="sec-estoque" class="section">
+                <div class="box">
+                    <h3><i class="fa-solid fa-plus-circle"></i> Novo Item</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label>Nome do Produto</label><input type="text" id="p-nome"></div>
+                        <div class="form-group"><label>Qtd em Estoque</label><input type="number" id="p-qtd"></div>
+                        <div class="form-group"><label>Custo (R$)</label><input type="number" id="p-custo"></div>
+                        <div class="form-group"><label>Venda (R$)</label><input type="number" id="p-venda"></div>
+                        <div class="form-group"><label>Vencimento</label><input type="date" id="p-val"></div>
+                    </div>
+                    <button class="btn btn-blue" onclick="salvarProduto()">Cadastrar no Estoque</button>
+                </div>
+                <div class="box">
+                    <h3><i class="fa-solid fa-list-check"></i> Itens Cadastrados</h3>
+                    <table id="tbl-estoque">
+                        <thead><tr><th>Produto</th><th>Qtd</th><th>Preço Venda</th><th>Validade</th><th>Status</th><th>Ação</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="sec-dividas" class="section adm-only">
+                <div class="box">
+                    <h3><i class="fa-solid fa-user-tag"></i> Registrar "Fiado"</h3>
+                    <div class="form-grid">
+                        <input type="text" id="d-nome" placeholder="Nome do Cliente">
+                        <input type="number" id="d-valor" placeholder="Valor total devido">
+                    </div>
+                    <button class="btn btn-blue" onclick="salvarDivida()">Salvar no Caderninho</button>
+                </div>
+                <div class="box">
+                    <h3>Clientes Devedores</h3>
+                    <table id="tbl-dividas">
+                        <thead><tr><th>Cliente</th><th>Dívida</th><th>Ação</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="sec-lucros" class="section adm-only">
+                <div class="box">
+                    <h3><i class="fa-solid fa-sack-dollar" style="color: #059669;"></i> Previsão de Ganhos</h3>
+                    <table id="tbl-lucros">
+                        <thead><tr><th>Produto</th><th>Investimento Total</th><th>Lucro Líquido</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="sec-logs" class="section adm-only">
+                <div class="box">
+                    <h3><i class="fa-solid fa-eye"></i> Monitoramento de Ações</h3>
+                    <table id="tbl-logs">
+                        <thead><tr><th>Data/Hora</th><th>Quem fez</th><th>O que fez</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
-
-        <div id="sec-logs" class="app-section adm-only">
-            <div class="content-box">
-                <h3>Histórico de Ações (Quem mexeu no quê)</h3>
-                <table id="tbl-logs">
-                    <thead><tr><th>Data/Hora</th><th>Utilizador</th><th>Ação Realizada</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="sec-fornecedores" class="app-section adm-only"><div class="content-box"><h3>Fornecedores</h3><p>Módulo em desenvolvimento.</p></div></div>
     </div>
-</div>
 
-<script>
-    // Banco de Dados Local
-    let stock = JSON.parse(localStorage.getItem('db_stock')) || [];
-    let dividas = JSON.parse(localStorage.getItem('db_dividas')) || [];
-    let logs = JSON.parse(localStorage.getItem('db_logs')) || [];
-    let userAtual = "";
+    <script>
+        let db_estoque = JSON.parse(localStorage.getItem('m_estoque')) || [];
+        let db_dividas = JSON.parse(localStorage.getItem('m_dividas')) || [];
+        let db_logs = JSON.parse(localStorage.getItem('m_logs')) || [];
+        let usuarioLogado = "";
 
-    function tentarLogin() {
-        const u = document.getElementById('userInput').value;
-        const s = document.getElementById('passInput').value;
+        function logar() {
+            const u = document.getElementById('user').value;
+            const s = document.getElementById('pass').value;
 
-        if(u === 'adm264' && s === '467') {
-            userAtual = "Administrador";
-            iniciarApp(true);
-        } else if(u === 'user24608' && s === '7464') {
-            userAtual = "Funcionário";
-            iniciarApp(false);
-        } else {
-            alert('Dados incorretos!');
+            if(u === 'adm264' && s === '467') {
+                usuarioLogado = "Administrador";
+                document.getElementById('appBody').classList.add('mode-adm');
+                entrar();
+            } else if(u === 'user24608' && s === '7464') {
+                usuarioLogado = "Funcionário";
+                entrar();
+            } else {
+                alert('Dados incorretos!');
+            }
         }
-    }
 
-    function iniciarApp(isAdm) {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('systemArea').style.display = 'block';
-        document.getElementById('userNameDisplay').innerText = userAtual;
-        if(isAdm) document.getElementById('bodyApp').classList.add('is-adm');
+        function entrar() {
+            document.getElementById('loginArea').style.display = 'none';
+            document.getElementById('sysArea').style.display = 'block';
+            document.getElementById('userName').innerText = usuarioLogado;
+            document.getElementById('welcomeName').innerText = usuarioLogado.split(' ')[0];
+            atualizarTabelas();
+        }
 
-        atualizarInterface();
-    }
+        function irPara(idSec, link) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(idSec).classList.add('active');
+            document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
+            link.classList.add('active');
+            document.getElementById('screenTitle').innerText = link.innerText;
+        }
 
-    function navegar(id, link) {
-        document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        link.classList.add('active');
-        document.getElementById('viewTitle').innerText = link.querySelector('span').innerText;
-    }
+        function addLog(txt) {
+            db_logs.unshift({ data: new Date().toLocaleString(), user: usuarioLogado, acao: txt });
+            localStorage.setItem('m_logs', JSON.stringify(db_logs));
+        }
 
-    // LOGICA DE LOGS (FISCALIZAÇÃO)
-    function addLog(msg) {
-        const novoLog = {
-            tempo: new Date().toLocaleString('pt-PT'),
-            user: userAtual,
-            msg: msg
-        };
-        logs.unshift(novoLog);
-        localStorage.setItem('db_logs', JSON.stringify(logs));
-        renderLogs();
-    }
+        function salvarProduto() {
+            const n = document.getElementById('p-nome').value;
+            const q = document.getElementById('p-qtd').value;
+            const c = document.getElementById('p-custo').value;
+            const v = document.getElementById('p-venda').value;
+            const d = document.getElementById('p-val').value;
 
-    function cadastrarProduto() {
-        const p = {
-            id: Date.now(),
-            nome: document.getElementById('p-nome').value,
-            qtd: parseInt(document.getElementById('p-qtd').value),
-            custo: parseFloat(document.getElementById('p-custo').value),
-            venda: parseFloat(document.getElementById('p-venda').value),
-            val: document.getElementById('p-val').value
-        };
+            if(!n || !q) return alert('Campos obrigatórios vazios!');
 
-        if(!p.nome || isNaN(p.qtd)) return alert('Preencha os campos!');
+            db_estoque.push({ id: Date.now(), nome: n, qtd: q, custo: c, venda: v, val: d });
+            localStorage.setItem('m_estoque', JSON.stringify(db_estoque));
+            addLog(`Cadastrou: ${n}`);
+            atualizarTabelas();
+            alert('Sucesso!');
+        }
 
-        stock.push(p);
-        localStorage.setItem('db_stock', JSON.stringify(stock));
-        addLog(`Adicionou o produto: ${p.nome} (Qtd: ${p.qtd})`);
-        atualizarInterface();
-        alert('Produto Salvo!');
-    }
+        function salvarDivida() {
+            const n = document.getElementById('d-nome').value;
+            const v = document.getElementById('d-valor').value;
+            db_dividas.push({ id: Date.now(), nome: n, valor: v });
+            localStorage.setItem('m_dividas', JSON.stringify(db_dividas));
+            addLog(`Dívida nova: ${n} (R$ ${v})`);
+            atualizarTabelas();
+        }
 
-    function deletarProd(id, nome) {
-        if(!confirm('Deseja eliminar este item?')) return;
-        stock = stock.filter(x => x.id !== id);
-        localStorage.setItem('db_stock', JSON.stringify(stock));
-        addLog(`ELIMINOU o produto: ${nome}`);
-        atualizarInterface();
-    }
+        function atualizarTabelas() {
+            const hoje = new Date();
 
-    function addDivida() {
-        const d = { id: Date.now(), nome: document.getElementById('d-nome').value, valor: parseFloat(document.getElementById('d-valor').value) };
-        dividas.push(d);
-        localStorage.setItem('db_dividas', JSON.stringify(dividas));
-        addLog(`Registrou dívida para: ${d.nome} (R$ ${d.valor})`);
-        atualizarInterface();
-    }
+            // Estoque
+            document.querySelector('#tbl-estoque tbody').innerHTML = db_estoque.map(p => {
+                const val = new Date(p.val);
+                const vencido = val < hoje;
+                return `
+                    <tr>
+                        <td><b>${p.nome}</b></td>
+                        <td>${p.qtd} un</td>
+                        <td>R$ ${p.venda}</td>
+                        <td>${p.val || '--'}</td>
+                        <td><span class="badge ${vencido ? 'badge-red' : 'badge-green'}">${vencido ? 'Vencido' : 'Ok'}</span></td>
+                        <td><i class="fa-solid fa-trash" style="color:red; cursor:pointer" onclick="apagarProduto(${p.id})"></i></td>
+                    </tr>
+                `;
+            }).join('');
 
-    function atualizarInterface() {
-        renderStock();
-        renderDividas();
-        renderLucros();
-        renderLogs();
-        
-        // Stats Dashboard
-        document.getElementById('st-stock').innerText = stock.length;
-        const totalDivida = dividas.reduce((acc, curr) => acc + curr.valor, 0);
-        document.getElementById('st-dividas').innerText = `R$ ${totalDivida.toFixed(2)}`;
-        
-        const totalLucro = stock.reduce((acc, p) => acc + ((p.venda - p.custo) * p.qtd), 0);
-        document.getElementById('st-lucro').innerText = `R$ ${totalLucro.toFixed(2)}`;
-    }
+            // Dívidas
+            document.querySelector('#tbl-dividas tbody').innerHTML = db_dividas.map(d => `
+                <tr><td>${d.nome}</td><td style="color:red; font-weight:bold">R$ ${d.valor}</td>
+                <td><button class="btn" style="background:#10b981; color:white; padding:5px 10px" onclick="pagar(${d.id})">Quitar</button></td></tr>
+            `).join('');
 
-    function renderStock() {
-        const tbody = document.querySelector('#tbl-estoque tbody');
-        tbody.innerHTML = stock.map(p => {
-            const isVencido = new Date(p.val) < new Date();
-            return `
-                <tr>
-                    <td><strong>${p.nome}</strong></td>
-                    <td>${p.qtd}</td>
-                    <td>R$ ${p.venda.toFixed(2)}</td>
-                    <td>${p.val}</td>
-                    <td>${isVencido ? '<span class="badge-vencido">Vencido</span>' : 'Ok'}</td>
-                    <td><button class="btn-del" onclick="deletarProd(${p.id},'${p.nome}')"><i class="fa-solid fa-trash"></i></button></td>
-                </tr>
-            `;
-        }).join('');
-    }
+            // Lucros
+            document.querySelector('#tbl-lucros tbody').innerHTML = db_estoque.map(p => `
+                <tr><td>${p.nome}</td><td>R$ ${p.custo * p.qtd}</td><td style="color:#059669; font-weight:bold">R$ ${(p.venda - p.custo) * p.qtd}</td></tr>
+            `).join('');
 
-    function renderLogs() {
-        const tbody = document.querySelector('#tbl-logs tbody');
-        tbody.innerHTML = logs.map(l => `
-            <tr>
-                <td style="color:gray; font-size:12px">${l.tempo}</td>
-                <td><strong>${l.user}</strong></td>
-                <td>${l.msg}</td>
-            </tr>
-        `).join('');
-    }
+            // Logs
+            document.querySelector('#tbl-logs tbody').innerHTML = db_logs.slice(0, 20).map(l => `
+                <tr><td style="font-size:12px">${l.data}</td><td><b>${l.user}</b></td><td>${l.acao}</td></tr>
+            `).join('');
+        }
 
-    function renderDividas() {
-        const tbody = document.querySelector('#tbl-dividas tbody');
-        tbody.innerHTML = dividas.map(d => `
-            <tr><td>${d.nome}</td><td style="color:red">R$ ${d.valor.toFixed(2)}</td>
-            <td><button class="btn-del" onclick="dividas=dividas.filter(x=>x.id!=${d.id}); localStorage.setItem('db_dividas',JSON.stringify(dividas)); addLog('Recebeu pagamento de: ${d.nome}'); atualizarInterface()"><i class="fa-solid fa-check"></i></button></td></tr>
-        `).join('');
-    }
+        function apagarProduto(id) {
+            db_estoque = db_estoque.filter(x => x.id !== id);
+            localStorage.setItem('m_estoque', JSON.stringify(db_estoque));
+            addLog('Removeu um item do estoque');
+            atualizarTabelas();
+        }
 
-    function renderLucros() {
-        const tbody = document.querySelector('#tbl-lucros tbody');
-        tbody.innerHTML = stock.map(p => `
-            <tr>
-                <td>${p.nome}</td>
-                <td>R$ ${(p.custo * p.qtd).toFixed(2)}</td>
-                <td>R$ ${(p.venda * p.qtd).toFixed(2)}</td>
-                <td style="color:green; font-weight:bold">R$ ${((p.venda - p.custo) * p.qtd).toFixed(2)}</td>
-            </tr>
-        `).join('');
-    }
-</script>
-
+        function pagar(id) {
+            db_dividas = db_dividas.filter(x => x.id !== id);
+            localStorage.setItem('m_dividas', JSON.stringify(db_dividas));
+            addLog('Recebeu pagamento de dívida');
+            atualizarTabelas();
+        }
+    </script>
 </body>
 </html>
